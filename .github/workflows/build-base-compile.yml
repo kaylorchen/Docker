@@ -2,8 +2,11 @@ name: Build and push multi-arch Docker image
 
 on:
   push:
-    branches:
-      - master  # Trigger on push to main branch; change to your preference
+    paths:
+      - 'base-compile/Dockerfile'
+  pull_request:
+    paths:
+      - 'base-compile/Dockerfile'
 
 jobs:
   build-and-push:
