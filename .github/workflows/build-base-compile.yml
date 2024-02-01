@@ -27,7 +27,7 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: <username>/<repository>/<image-name>:latest
+          tags: kaylor/compile/base:latest
           platforms: linux/amd64,linux/arm64
 
       - name: Logout of DockerHub
