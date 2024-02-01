@@ -3,7 +3,7 @@ name: Build and push multi-arch Docker image
 on:
   push:
     branches:
-      - main  # Trigger on push to main branch; change to your preference
+      - master  # Trigger on push to main branch; change to your preference
 
 jobs:
   build-and-push:
