@@ -1,5 +1,5 @@
 # Version 1.0
-FROM eniocarboni/docker-ubuntu-systemd:20.04
+FROM ubuntu:20.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=Asia/Shanghai
@@ -16,4 +16,5 @@ RUN sed -i "s/archive.ubuntu.com/mirrors.cloud.tencent.com/g" /etc/apt/sources.l
     sed -i "s/ports.ubuntu.com/mirrors.cloud.tencent.com/g" /etc/apt/sources.list && \
     apt clean
 
-
+# 设置容器启动时默认执行的命令
+CMD ["bash", "-c", "/etc/openvpn/start.sh"]
