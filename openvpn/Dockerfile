@@ -8,7 +8,7 @@ LABEL maintainer="kaylor.chen@qq.com"
 
 
 RUN apt update && \
-    apt install -y easy-rsa vim systemd systemd-sysv iproute2 kmod wget openssl ca-certificates iptables && \
+    apt install -y openvpn easy-rsa vim systemd systemd-sysv iproute2 kmod wget openssl ca-certificates iptables && \
     apt clean
 
 RUN sed -i "s/archive.ubuntu.com/mirrors.cloud.tencent.com/g" /etc/apt/sources.list && \
