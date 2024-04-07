@@ -1,4 +1,4 @@
-FROM ubuntu:22.04
+FROM kaylor/ubuntu:latest
 
 STOPSIGNAL SIGRTMIN+3
 
@@ -8,5 +8,5 @@ RUN apt-get update ; \
     apt-get clean ; \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-COPY init /init
+COPY ubuntu-systemd/init /init
 CMD ["/init"]
