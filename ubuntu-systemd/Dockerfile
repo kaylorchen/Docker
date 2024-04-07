@@ -1,4 +1,4 @@
-FROM kaylor/ubuntu:latest
+FROM kaylor/ubuntu:22.04
 
 STOPSIGNAL SIGRTMIN+3
 
