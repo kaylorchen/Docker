@@ -1,5 +1,6 @@
+ARG TAG
 # Version 1.0
-FROM ubuntu:22.04
+FROM ubuntu:${TAG}
 
 ENV DEBIAN_FRONTEND=noninteractive
 # ENV TZ=Asia/Shanghai

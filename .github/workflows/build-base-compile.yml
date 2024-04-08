@@ -24,14 +24,35 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build and push
+      - name: Build and push 20.04
         uses: docker/build-push-action@v2
         with:
           context: .
           file: base-compile/Dockerfile
           push: true
-          tags: kaylor/base-compile:latest
+          tags: kaylor/base-compile:20.04
           platforms: linux/amd64,linux/arm64
+          build-args: TAG=20.04
+
+      - name: Build and push 22.04
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: base-compile/Dockerfile
+          push: true
+          tags: kaylor/base-compile:22.04
+          platforms: linux/amd64,linux/arm64
+          build-args: TAG=22.04
+      
+      - name: Build and push 18.04
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: base-compile/Dockerfile
+          push: true
+          tags: kaylor/base-compile:18.04
+          platforms: linux/amd64,linux/arm64
+          build-args: TAG=18.04
 
       - name: Logout of DockerHub
         run: docker logout
