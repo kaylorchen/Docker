@@ -6,7 +6,8 @@ STOPSIGNAL SIGRTMIN+3
 RUN apt-get update ; \
     apt-get install -y systemd systemd-sysv; \
     apt-get clean ; \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* ;\ 
+    printf '#!/bin/sh\nexit 0\n' > /usr/sbin/policy-rc.d
 
 COPY ubuntu-systemd/init /init
 CMD ["/init"]
