@@ -9,7 +9,10 @@ RUN apt-get update ; \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* ;\ 
     printf '#!/bin/sh\nexit 0\n' > /usr/sbin/policy-rc.d
 
-ENV ARCH=$(arch)
-RUN echo ${ARCH}
-COPY ubuntu-systemd/init.{ARCH} /init
+COPY ubuntu-systemd/init.aarch64 /
+COPY ubuntu-systemd/init.x86_64 /
+
+RUN bash -c 'if [[ $(uname -m) == "x86_64" ]]; then cp /init.x86_64 /init; elif [[ $(uname -m) == "aarch64" ]]; then cp /init.aarch64 /init; else echo "Unknown Architecture"; fi' && \
+    rm /init.aarch64 /init.x86_64
+
 CMD ["/init"]
