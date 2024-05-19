@@ -10,5 +10,6 @@ RUN apt-get update ; \
     printf '#!/bin/sh\nexit 0\n' > /usr/sbin/policy-rc.d
 
 ENV ARCH=$(arch)
+RUN echo ${ARCH}
 COPY ubuntu-systemd/init.{ARCH} /init
 CMD ["/init"]
