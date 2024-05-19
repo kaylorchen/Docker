@@ -11,9 +11,23 @@ on:
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        architecture: [amd64, arm64]
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+
+      - name: Create init
+        run: |
+          if [ ${{ matrix.architecture}} == arm64 ]; then
+            apt install -y g++-aarch64-linux-gnu
+            aarch64-linux-gnu-g++ ubuntu-systemd/init.cpp -o ubuntu-systemd/init
+          else
+            apt install -y g++
+            g++ ubuntu-systemd/init.cpp -o ubuntu-systemd/init
+          fi
+          file ubuntu-systemd/init
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
@@ -31,7 +45,7 @@ jobs:
           file: ubuntu-systemd/Dockerfile
           push: true
           tags: kaylor/ubuntu-systemd:latest
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/${{ matrix.architecture}}
 
       - name: Logout of DockerHub
         run: docker logout
