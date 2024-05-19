@@ -14,12 +14,18 @@ COPY rk3588-kaylor.list /etc/apt/sources.list.d/
 RUN apt update && apt install -y --no-install-recommends gcc g++ cmake openssh-server &&  \
     echo "PermitRootLogin yes" | tee -a /etc/ssh/sshd_config
 
-CMD [ "/etc/init.d/ssh", "start" ]
-EXPOSE 22
-
+RUN echo 'root:root' | chpasswd
 
 RUN apt update && apt install -y --no-install-recommends vim libopencv-dev g++ gcc \
     fakeroot devscripts libspdlog-dev libsystemd-dev libcap-dev liblz4-dev \
     libgcrypt-dev libzstd-dev debhelper rknpu2-dev librockchip-mpp-dev librga-dev \
     libstb-dev libturbojpeg0-dev libjpeg-turbo8-dev librga2 libboost-dev \
     libboost-system1.74-dev kaylordut-dev
+
+# 设置当容器启动时自动运行 SSH 服务
+# 使用 init 脚本启动 SSH 服务
+CMD ["/etc/init.d/ssh", "start"]
+
+# 因为 `ssh start` 命令会执行完毕后退出，我们需要一个持续运行的前台进程
+# 可以通过让 bash 在前台无限运行来做到这一点
+CMD ["bash", "-c", "service ssh start; while true; do sleep 30; done;"]
