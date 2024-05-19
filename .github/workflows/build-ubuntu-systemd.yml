@@ -18,11 +18,11 @@ jobs:
       - name: Create init
         run: |
           sudo apt install -y g++-aarch64-linux-gnu
-          sudo aarch64-linux-gnu-g++ ubuntu-systemd/init.cpp -o ubuntu-systemd/init.arm64
+          sudo aarch64-linux-gnu-g++ ubuntu-systemd/init.cpp -o ubuntu-systemd/init.aarch64
           sudo apt install -y g++
-          sudo g++ ubuntu-systemd/init.cpp -o ubuntu-systemd/init.amd64
-          file ubuntu-systemd/init.arm64
-          file ubuntu-systemd/init.amd64
+          sudo g++ ubuntu-systemd/init.cpp -o ubuntu-systemd/init.x86_64
+          file ubuntu-systemd/init.aarch64
+          file ubuntu-systemd/init.x86_64
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
@@ -41,7 +41,6 @@ jobs:
           push: true
           tags: kaylor/ubuntu-systemd:latest
           platforms: linux/arm64, linux/amd64
-          build-args: PLATFORM=arm64, PLATFORM=amd64
 
       - name: Logout of DockerHub
         run: docker logout

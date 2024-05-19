@@ -1,4 +1,3 @@
-ARG PLATFORM
 FROM kaylor/ubuntu:22.04
 
 STOPSIGNAL SIGRTMIN+3
@@ -10,5 +9,6 @@ RUN apt-get update ; \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* ;\ 
     printf '#!/bin/sh\nexit 0\n' > /usr/sbin/policy-rc.d
 
-COPY ubuntu-systemd/init.{PLATFORM} /init
+ENV ARCH=$(arch)
+COPY ubuntu-systemd/init.{ARCH} /init
 CMD ["/init"]
