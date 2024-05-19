@@ -21,11 +21,11 @@ jobs:
       - name: Create init
         run: |
           if [ ${{ matrix.architecture}} == arm64 ]; then
-            apt install -y g++-aarch64-linux-gnu
-            aarch64-linux-gnu-g++ ubuntu-systemd/init.cpp -o ubuntu-systemd/init
+            sudo apt install -y g++-aarch64-linux-gnu
+            sudo aarch64-linux-gnu-g++ ubuntu-systemd/init.cpp -o ubuntu-systemd/init
           else
-            apt install -y g++
-            g++ ubuntu-systemd/init.cpp -o ubuntu-systemd/init
+            sudo apt install -y g++
+            sudo g++ ubuntu-systemd/init.cpp -o ubuntu-systemd/init
           fi
           file ubuntu-systemd/init
 
