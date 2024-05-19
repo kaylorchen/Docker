@@ -1,4 +1,4 @@
-name: Build and push multi-arch Docker image
+name: Build and push multi-arch ubuntu-systemd Docker image
 
 on:
   push:

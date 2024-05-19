@@ -10,4 +10,5 @@ RUN apt-get update ; \
     printf '#!/bin/sh\nexit 0\n' > /usr/sbin/policy-rc.d
 
 COPY ubuntu-systemd/init /init
+
 CMD ["/init"]
