@@ -21,7 +21,7 @@ RUN apt update && apt install -y --no-install-recommends vim libopencv-dev g++ g
     fakeroot devscripts libspdlog-dev libsystemd-dev libcap-dev liblz4-dev \
     libgcrypt-dev libzstd-dev debhelper rknpu2-dev librockchip-mpp-dev librga-dev \
     libstb-dev libturbojpeg0-dev libjpeg-turbo8-dev librga2 libboost-dev \
-    libboost-system1.74-dev kaylordut-dev && \
+    libboost-system1.74-dev kaylordut-dev libbytetrack && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* 
 
 # 设置当容器启动时自动运行 SSH 服务
