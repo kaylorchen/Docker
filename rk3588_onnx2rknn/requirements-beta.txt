@@ -15,3 +15,4 @@ onnxoptimizer==0.3.8
 onnxruntime==1.16.0
 torch>=1.13.1,<=2.1.0
 tensorflow==2.8.0
+onnx-simplifier
