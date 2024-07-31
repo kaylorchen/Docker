@@ -15,7 +15,7 @@ EOF
 RUN	mkdir -p /opt/nvidia/l4t-packages/ && \
 		touch /opt/nvidia/l4t-packages/.nv-l4t-disable-boot-fw-update-in-preinstall && \
 		apt update && \
-		apt install -y --no-install-recommends wget nvidia-l4t-core && \
+		yes ' ' | apt install -y --no-install-recommends wget nvidia-l4t-core && \
 		apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 RUN wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/arm64/cuda-keyring_1.1-1_all.deb && \ 
