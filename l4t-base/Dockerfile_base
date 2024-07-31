@@ -1,0 +1,26 @@
+FROM nvcr.io/nvidia/l4t-base:r36.2.0
+
+ENV DEBIAN_FRONTEND=noninteractive
+# ENV TZ=Asia/Shanghai
+# 维护者
+LABEL maintainer="kaylor.chen@qq.com"
+
+# RUN sed -i "s/archive.ubuntu.com/mirrors.cloud.tencent.com/g" /etc/apt/sources.list && \
+#     sed -i "s/security.ubuntu.com/mirrors.cloud.tencent.com/g" /etc/apt/sources.list && \
+#     sed -i "s/ports.ubuntu.com/mirrors.cloud.tencent.com/g" /etc/apt/sources.list && \
+RUN cat > /etc/apt/sources.list.d/l4t-base.list <<EOF
+deb https://repo.download.nvidia.com/jetson/t234 r36.2 main
+deb https://repo.download.nvidia.com/jetson/ffmpeg r36.2 main
+EOF
+RUN	apt update && \
+		apt install -y --no-install-recommends wget && \
+		apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+RUN wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/arm64/cuda-keyring_1.1-1_all.deb && \ 
+		dpkg -i cuda-keyring_1.1-1_all.deb && \
+		apt update && \
+		apt install -y --no-install-recommends cuda-toolkit-12-4 cuda-compat-12-4 tensorrt-dev tensorrt tensorrt-libs	&& \
+		apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+
