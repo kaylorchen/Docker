@@ -12,7 +12,7 @@ LABEL maintainer="kaylor.chen@qq.com"
 RUN	mkdir -p /opt/nvidia/l4t-packages/ && \
 		touch /opt/nvidia/l4t-packages/.nv-l4t-disable-boot-fw-update-in-preinstall && \
 		apt update && \
-		yes ' ' | apt install -y --no-install-recommends wget ca-certificates cpio && \ 
+		yes ' ' | apt install -y --no-install-recommends wget ca-certificates cpio sudo python3 curl kmod && \ 
 		apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
@@ -22,13 +22,17 @@ deb [signed-by=/usr/share/keyrings/jetson-ota-public.gpg] https://repo.download.
 deb [signed-by=/usr/share/keyrings/jetson-ota-public.gpg] https://repo.download.nvidia.com/jetson/ffmpeg r36.3 main
 EOF
 
-COPY l4t-base/packages_only_cuda.list packages_only_cuda.list
+COPY l4t-base/packages.list packages.list
+COPY l4t-base/packages_l4t.list packages_l4t.list
 COPY l4t-base/jetson-ota-public.gpg /usr/share/keyrings/jetson-ota-public.gpg
 
 RUN	wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/arm64/cuda-keyring_1.1-1_all.deb && \ 
-		dpkg -i cuda-keyring_1.1-1_all.deb && \
-		apt update && \
-		apt install -y --no-install-recommends $(sed ':label;N;s/\n/ /;b label' packages_only_cuda.list) && \
+		dpkg -i cuda-keyring_1.1-1_all.deb
+
+RUN	apt-get update && \
+		apt-get upgrade -y && \
+		apt-get install -y --no-install-recommends $(sed ':label;N;s/\n/ /;b label' packages_l4t.list) && \
+		# apt install -y --no-install-recommends $(sed ':label;N;s/\n/ /;b label' packages.list) && \
 		apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
