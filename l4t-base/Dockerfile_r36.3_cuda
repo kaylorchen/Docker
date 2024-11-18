@@ -9,6 +9,7 @@ LABEL maintainer="kaylor.chen@qq.com"
 #     sed -i "s/security.ubuntu.com/mirrors.cloud.tencent.com/g" /etc/apt/sources.list && \
 #     sed -i "s/ports.ubuntu.com/mirrors.cloud.tencent.com/g" /etc/apt/sources.list
 
+
 RUN	mkdir -p /opt/nvidia/l4t-packages/ && \
 		touch /opt/nvidia/l4t-packages/.nv-l4t-disable-boot-fw-update-in-preinstall && \
 		apt update && \
