@@ -4,8 +4,10 @@ on:
   push:
     paths:
       - 'l4t-base/Dockerfile_r36.3'
+      - 'l4t-base/packages.list'
   pull_request:
     paths:
+      - 'l4t-base/packages.list'
       - 'l4t-base/Dockerfile_r36.3'
 
 jobs:
