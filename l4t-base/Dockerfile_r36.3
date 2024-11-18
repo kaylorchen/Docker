@@ -15,18 +15,16 @@ deb https://repo.download.nvidia.com/jetson/t234 r36.3 main
 deb https://repo.download.nvidia.com/jetson/ffmpeg r36.3 main
 EOF
 
+COPY l4t-base/packages.list packages.list
+
 RUN	mkdir -p /opt/nvidia/l4t-packages/ && \
 		touch /opt/nvidia/l4t-packages/.nv-l4t-disable-boot-fw-update-in-preinstall && \
 		apt update && \
-		yes ' ' | apt install -y --no-install-recommends wget nvidia-l4t-core && \
-		apt-get clean && \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
-COPY l4t-base/packages.list packages.list
-
-RUN wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/arm64/cuda-keyring_1.1-1_all.deb && \ 
+		yes ' ' | apt install -y --no-install-recommends wget && \
+		wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/arm64/cuda-keyring_1.1-1_all.deb && \ 
 		dpkg -i cuda-keyring_1.1-1_all.deb && \
 		apt update && \
 		apt install -y --no-install-recommends $(sed ':label;N;s/\n/ /;b label' packages.list) && \
 		apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
