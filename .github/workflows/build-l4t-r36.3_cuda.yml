@@ -1,6 +1,7 @@
 name: Build and push l4t r36.3 cuda Docker image
 
 on:
+  workflow_dispatch:
   push:
     paths:
       - 'l4t-base/Dockerfile_r36.3_cuda'
