@@ -8,14 +8,13 @@ LABEL maintainer="kaylor.chen@qq.com"
 # RUN sed -i "s/archive.ubuntu.com/mirrors.cloud.tencent.com/g" /etc/apt/sources.list && \
 #     sed -i "s/security.ubuntu.com/mirrors.cloud.tencent.com/g" /etc/apt/sources.list && \
 #     sed -i "s/ports.ubuntu.com/mirrors.cloud.tencent.com/g" /etc/apt/sources.list
-RUN grep -rn "jetson" /etc/apt/ && exit
 
 COPY l4t-base/packages.list packages.list
 COPY l4t-base/packages_l4t.list packages_l4t.list
 
-RUN	apt-get update && \
+RUN	apt-get update && apt-get upgrade &&\
 		apt-get install -y --no-install-recommends sudo kmod python3 && \
-		apt-get install -y --no-install-recommends nvidia-l4t-kernel=5.15.136-tegra-36.3.0-20240506102626 && \
+		# apt-get install -y --no-install-recommends nvidia-l4t-kernel=5.15.136-tegra-36.3.0-20240506102626 && \
 		apt-get install -y --no-install-recommends --allow-downgrades $(sed ':label;N;s/\n/ /;b label' packages_l4t.list) && \
 		apt-get install -y --no-install-recommends --allow-downgrades $(sed ':label;N;s/\n/ /;b label' packages.list) && \
 		apt-get clean && \
