@@ -6,8 +6,13 @@ ENV TZ=Asia/Shanghai
 LABEL maintainer="kaylor.chen@qq.com"
 
 COPY l4t-base/packages.list packages.list
+COPY l4t-base/packages_tensorrt.list packages_tensorrt.list
 
 RUN	apt-get update && \
+		apt-get install -y --no-install-recommends --allow-downgrades $(sed ':label;N;s/\n/ /;b label' packages_tensorrt.list) && \
+		apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
+		apt-get update && \
 		apt install -y --no-install-recommends --allow-downgrades $(sed ':label;N;s/\n/ /;b label' packages.list) && \
 		apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
