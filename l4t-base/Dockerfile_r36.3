@@ -12,7 +12,7 @@ LABEL maintainer="kaylor.chen@qq.com"
 RUN	mkdir -p /opt/nvidia/l4t-packages/ && \
 		touch /opt/nvidia/l4t-packages/.nv-l4t-disable-boot-fw-update-in-preinstall && \
 		apt update && \
-		yes ' ' | apt install -y --no-install-recommends wget ca-certificates cpio && \ 
+		yes ' ' | apt install -y --no-install-recommends wget ca-certificates cpio sudo python3 curl kmod && \ 
 		apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
