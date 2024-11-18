@@ -29,9 +29,8 @@ LABEL maintainer="kaylor.chen@qq.com"
 # RUN	wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/arm64/cuda-keyring_1.1-1_all.deb && \ 
 # 		dpkg -i cuda-keyring_1.1-1_all.deb
 
-RUN cat /etc/apt/sources.list.d/* && ls -lh /etc/apt/sources.list.d/
-
-RUN	apt-get update && \
+RUN	mv /etc/apt/sources.list.d/nvidia-l4t-apt-source.list /etc/apt/sources.list.d/nvidia-l4t-apt-source.list.save && \
+		apt-get update && \
 		apt-get upgrade -y && \
 		# apt-get install -y --no-install-recommends $(sed ':label;N;s/\n/ /;b label' packages_l4t.list) && \
 		apt install -y --no-install-recommends $(sed ':label;N;s/\n/ /;b label' packages.list) && \
