@@ -11,10 +11,11 @@ LABEL maintainer="kaylor.chen@qq.com"
 
 COPY l4t-base/packages.list packages.list
 COPY l4t-base/packages_l4t.list packages_l4t.list
+COPY l4t-base/pre_packages.list pre_packages.list
 
 RUN	apt-get update && apt-get upgrade -y &&\
 		apt-get install -y --no-install-recommends sudo kmod python3 && \
-		# apt-get install -y --no-install-recommends nvidia-l4t-kernel=5.15.136-tegra-36.3.0-20240506102626 && \
+		apt-get install -y --no-install-recommends --allow-downgrades $(sed ':label;N;s/\n/ /;b label' pre_packages.list) && \
 		apt-get install -y --no-install-recommends --allow-downgrades $(sed ':label;N;s/\n/ /;b label' packages_l4t.list) && \
 		apt-get install -y --no-install-recommends --allow-downgrades $(sed ':label;N;s/\n/ /;b label' packages.list) && \
 		apt-get clean && \
