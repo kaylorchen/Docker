@@ -28,7 +28,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: .
-          file: l4t-base/Dockerfile_base
+          file: l4t-base/Dockerfile_r36.3
           push: true
           tags: kaylor/l4t-base:r36.3.0_base
           platforms: linux/arm64

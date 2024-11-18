@@ -5,9 +5,9 @@ ENV TZ=Asia/Shanghai
 # 维护者
 LABEL maintainer="kaylor.chen@qq.com"
 
-RUN sed -i "s/archive.ubuntu.com/mirrors.cloud.tencent.com/g" /etc/apt/sources.list && \
-    sed -i "s/security.ubuntu.com/mirrors.cloud.tencent.com/g" /etc/apt/sources.list && \
-    sed -i "s/ports.ubuntu.com/mirrors.cloud.tencent.com/g" /etc/apt/sources.list
+# RUN sed -i "s/archive.ubuntu.com/mirrors.cloud.tencent.com/g" /etc/apt/sources.list && \
+#     sed -i "s/security.ubuntu.com/mirrors.cloud.tencent.com/g" /etc/apt/sources.list && \
+#     sed -i "s/ports.ubuntu.com/mirrors.cloud.tencent.com/g" /etc/apt/sources.list
 
 RUN cat > /etc/apt/sources.list.d/l4t-base.list <<EOF
 deb https://repo.download.nvidia.com/jetson/common r36.3 main
