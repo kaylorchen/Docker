@@ -7,8 +7,7 @@ LABEL maintainer="kaylor.chen@qq.com"
 
 COPY l4t-base/packages.list packages.list
 
-RUN	mv /etc/apt/sources.list.d/nvidia-l4t-apt-source.list /etc/apt/sources.list.d/nvidia-l4t-apt-source.list.save && \
-		apt-get update && \
+RUN	apt-get update && \
 		apt install -y --no-install-recommends --allow-downgrades $(sed ':label;N;s/\n/ /;b label' packages.list) && \
 		apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
