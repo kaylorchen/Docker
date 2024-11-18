@@ -1,0 +1,16 @@
+FROM kaylor/l4t-base:r36.3.0_base
+
+ENV DEBIAN_FRONTEND=noninteractive
+ENV TZ=Asia/Shanghai
+# 维护者
+LABEL maintainer="kaylor.chen@qq.com"
+
+COPY l4t-base/packages.list packages.list
+COPY l4t-base/packages_cuda.list packages_cuda.list
+
+RUN	mv /etc/apt/sources.list.d/nvidia-l4t-apt-source.list /etc/apt/sources.list.d/nvidia-l4t-apt-source.list.save && \
+		apt-get update && \
+		apt install -y --no-install-recommends --allow-downgrades $(sed ':label;N;s/\n/ /;b label' packages_cuda.list) && \
+		apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
