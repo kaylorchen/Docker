@@ -96,7 +96,6 @@ nvidia-l4t-gbm=36.3.0-20240506102626
 nvidia-l4t-graphics-demos=36.3.0-20240506102626
 nvidia-l4t-gstreamer=36.3.0-20240506102626
 nvidia-l4t-init=36.3.0-20240506102626
-nvidia-l4t-initrd=36.3.0-20240506102626
 nvidia-l4t-jetson-io=36.3.0-20240506102626
 nvidia-l4t-jetson-multimedia-api=36.3.0-20240506102626
 nvidia-l4t-jetsonpower-gui-tools=36.3.0-20240506102626
