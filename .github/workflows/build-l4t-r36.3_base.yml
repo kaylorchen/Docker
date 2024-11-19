@@ -1,4 +1,4 @@
-name: Build and push l4t r36.3 Docker image
+name: Build and push l4t r36.3 base Docker image
 
 on:
   push:
