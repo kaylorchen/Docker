@@ -1,6 +1,8 @@
 # Version 1.0
 FROM microros/base:humble
 
+SHELL [ "/bin/bash", "-c" ]
+ENV SHELL=/bin/bash
 ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=Asia/Shanghai
 # 维护者
