@@ -13,7 +13,9 @@ LABEL maintainer="kaylor.chen@qq.com"
 #     sed -i "s/ports.ubuntu.com/mirrors.cloud.tencent.com/g" /etc/apt/sources.list
 
 RUN apt-get update && \
-    source /opt/ros/humble/setup.sh && \ 
+    source /opt/ros/humble/setup.bash && \ 
+    source /uros/install/setup.bash && \ 
+    cd /uros && \
     ros2 run micro_ros_setup create_firmware_ws.sh freertos olimex-stm32-e407 && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
