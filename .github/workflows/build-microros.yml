@@ -30,7 +30,7 @@ jobs:
           context: .
           file: microros/Dockerfile
           push: true
-          tags: kaylorchen/microros/base:humble
+          tags: kaylor/microros_base:humble
           platforms: linux/amd64
 
       - name: Logout of DockerHub
