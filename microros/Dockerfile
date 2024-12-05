@@ -14,8 +14,8 @@ LABEL maintainer="kaylor.chen@qq.com"
 
 RUN apt-get update && \
     source /opt/ros/humble/setup.bash && \ 
-    source /uros/install/setup.bash && \ 
-    cd /uros && \
+    source /uros_ws/install/setup.bash && \ 
+    cd /uros_ws && \
     ros2 run micro_ros_setup create_firmware_ws.sh freertos olimex-stm32-e407 && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
