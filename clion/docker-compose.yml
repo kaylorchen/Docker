@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  clion-dev-app:
+    image: clion-dev  # Replace with your built image
+    container_name: clion-local-dev
+    user: kaylor
+    working_dir: ${HOME}
+    environment:
+      - DISPLAY=${DISPLAY}
+      - QT_X11_NO_MITSHM=1
+      - DEBIAN_FRONTEND=noninteractive
+      - TZ=Asia/Shanghai
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix  # X11 socket
+      - ${HOME}/.Xauthority:/home/kaylor/.Xauthority:ro  # X11 authentication
+      - /opt/clion:/opt/clion
+      - ${HOME}/.config/JetBrains:${HOME}/.config/JetBrains
+    privileged: true  # Needed for X11 access (simplified setup)
+    entrypoint: bash
+    stdin_open: true
+    tty: true
+

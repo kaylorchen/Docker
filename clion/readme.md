@@ -1,0 +1,1 @@
+docker buildx build --progress=tty -t clion-dev . 
