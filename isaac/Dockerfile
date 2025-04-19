@@ -6,7 +6,4 @@ ENV TZ=Asia/Shanghai
 # 维护者
 LABEL maintainer="kaylor.chen@qq.com"
 
-RUN sed -i "s/archive.ubuntu.com/mirrors.cloud.tencent.com/g" /etc/apt/sources.list && \
-    sed -i "s/security.ubuntu.com/mirrors.cloud.tencent.com/g" /etc/apt/sources.list && \
-    sed -i "s/ports.ubuntu.com/mirrors.cloud.tencent.com/g" /etc/apt/sources.list
 RUN /isaac-sim/kit/python/bin/python3 -m pip install --pre torch torchvision torchaudio --index-url https://download.pytorch.org/whl/nightly/cu128 && /isaac-sim/kit/python/bin/python3 -m pip cache purge
