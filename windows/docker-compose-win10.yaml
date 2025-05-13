@@ -2,6 +2,12 @@ services:
   windows:
     image: dockurr/windows
     container_name: windows10
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        ip route del default
+        tini -s /run/entry.sh
     environment:
       VERSION: "10"
       DISK_SIZE: "256G"
