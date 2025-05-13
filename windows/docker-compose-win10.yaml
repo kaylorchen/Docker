@@ -1,9 +1,9 @@
 services:
   windows:
     image: dockurr/windows
-    container_name: windows11
+    container_name: windows10
     environment:
-      VERSION: "11"
+      VERSION: "10"
       DISK_SIZE: "256G"
       RAM_SIZE: "8G"
       CPU_CORES: "4"
@@ -17,11 +17,11 @@ services:
     cap_add:
       - NET_ADMIN
     ports:
-      - 8006:8006
-      - 13389:3389/tcp
-      - 13389:3389/udp
+      - 8008:8006
+      - 13391:3389/tcp
+      - 13391:3389/udp
     volumes:
-      - ./windows:/storage
+      - ./windows10:/storage
       - /mnt/data/windows:/data
     restart: always
     stop_grace_period: 2m

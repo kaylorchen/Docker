@@ -1,9 +1,9 @@
 services:
   windows:
     image: dockurr/windows
-    container_name: windows11
+    container_name: windows7
     environment:
-      VERSION: "11"
+      VERSION: "7u"
       DISK_SIZE: "256G"
       RAM_SIZE: "8G"
       CPU_CORES: "4"
@@ -17,11 +17,11 @@ services:
     cap_add:
       - NET_ADMIN
     ports:
-      - 8006:8006
-      - 13389:3389/tcp
-      - 13389:3389/udp
+      - 8007:8006
+      - 13390:3389/tcp
+      - 13390:3389/udp
     volumes:
-      - ./windows:/storage
+      - ./windows7:/storage
       - /mnt/data/windows:/data
     restart: always
     stop_grace_period: 2m
