@@ -78,7 +78,8 @@ get_server_new_ip() {
     # [ -z "${NEWIPADD}" ] && NEWIPADD=$( wget -qO- -t1 -T2 https://www.fbisb.com/ip.php )
     # [ -z "${NEWIPADD}" ] && NEWIPADD=$( curl  -s www.ip111.cn  |grep China |awk -F ' ' '{print $1}' )
     # [ -z "${NEWIPADD}" ] && NEWIPADD=$( ip address | grep pppoe | grep inet | awk -F ' ' '{print $2}' )
-    [ -z "${NEWIPADD}" ] && NEWIPADD=$(curl -4 ipinfo.io/ip)
+    # [ -z "${NEWIPADD}" ] && NEWIPADD=$(curl -4 ipinfo.io/ip)
+    [ -z "${NEWIPADD}" ] && NEWIPADD=$(curl -4 myip.ipip.net | awk -F '：' '{print $2}' | awk '{print $1}')
     echo "new ip is ${NEWIPADD}"
     if [[ ! "${NEWIPADD}" ]]; then echo "Failed to get server public network address from internet." >> "${OUTPUTLOG}"; exit 1; fi
 }
