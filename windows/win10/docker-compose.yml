@@ -9,13 +9,14 @@ services:
         ip route del default
         tini -s /run/entry.sh
     environment:
+      TZ: Asia/Shanghai
       VERSION: "10"
       DISK_SIZE: "256G"
       RAM_SIZE: "8G"
-      CPU_CORES: "4"
+      CPU_CORES: "10"
       USERNAME: "kaylor"
       PASSWORD: " "
-      ARGUMENTS: "-device qemu-xhci -device usb-host,vendorid=0x0c66,productid=0x000c"
+      ARGUMENTS: "-device qemu-xhci -device usb-host,vendorid=0x05e3,productid=0x0626 -device usb-host,vendorid=0x05e3,productid=0x0610"
     devices:
       - /dev/kvm
       - /dev/net/tun
