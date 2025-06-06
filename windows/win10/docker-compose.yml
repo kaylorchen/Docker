@@ -12,17 +12,20 @@ services:
       TZ: Asia/Shanghai
       VERSION: "10"
       DISK_SIZE: "256G"
-      RAM_SIZE: "8G"
+      RAM_SIZE: "10G"
       CPU_CORES: "10"
       USERNAME: "kaylor"
       PASSWORD: " "
-      ARGUMENTS: "-device qemu-xhci -device usb-host,vendorid=0x05e3,productid=0x0626 -device usb-host,vendorid=0x05e3,productid=0x0610"
+      ARGUMENTS: "-device vfio-pci,host=17:00.0,multifunction=on"
+      # ARGUMENTS: "-device qemu-xhci -device usb-host,vendorid=0x05e3,productid=0x0626 -device usb-host,vendorid=0x05e3,productid=0x0610"
     devices:
       - /dev/kvm
       - /dev/net/tun
       - /dev/bus/usb
+      - /dev/vfio
     cap_add:
       - NET_ADMIN
+      - IPC_LOCK
     ports:
       - 8008:8006
       - 13391:3389/tcp
@@ -30,5 +33,5 @@ services:
     volumes:
       - ./windows10:/storage
       - /mnt/data/windows:/data
-    restart: always
+    #restart: always
     stop_grace_period: 2m
