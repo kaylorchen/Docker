@@ -1,7 +1,14 @@
+networks:
+  windows-bridge:
+    external: true
+    name: windows-bridge
 services:
   windows:
     image: dockurr/windows
     container_name: windows10
+    networks:
+      windows-bridge:
+        ipv4_address: 192.168.10.2
     entrypoint:
       - /bin/sh
       - -c
@@ -12,7 +19,7 @@ services:
       TZ: Asia/Shanghai
       VERSION: "10"
       DISK_SIZE: "256G"
-      RAM_SIZE: "10G"
+      RAM_SIZE: "20G"
       CPU_CORES: "10"
       USERNAME: "kaylor"
       PASSWORD: " "

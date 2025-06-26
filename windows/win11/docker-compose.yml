@@ -1,7 +1,14 @@
+networks:
+  windows-bridge:
+    external: true
+    name: windows-bridge
 services:
   windows:
     image: dockurr/windows
     container_name: windows11
+    networks:
+      windows-bridge:
+        ipv4_address: 192.168.10.3
     environment:
       VERSION: "11"
       DISK_SIZE: "256G"
