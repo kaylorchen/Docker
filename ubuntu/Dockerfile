@@ -6,7 +6,7 @@ ENV TZ=Asia/Shanghai
 # 维护者
 LABEL maintainer="kaylor.chen@qq.com"
 
-RUN sed -i "s/archive.ubuntu.com/mirrors.cloud.tencent.com/g" /etc/apt/sources.list && \
-    sed -i "s/security.ubuntu.com/mirrors.cloud.tencent.com/g" /etc/apt/sources.list && \
-    sed -i "s/ports.ubuntu.com/mirrors.cloud.tencent.com/g" /etc/apt/sources.list
+RUN sed -i "s/archive.ubuntu.com/mirrors.huaweicloud.com/g" /etc/apt/sources.list && \
+    sed -i "s/security.ubuntu.com/mirrors.huaweicloud.com/g" /etc/apt/sources.list && \
+    sed -i "s/ports.ubuntu.com/mirrors.huaweicloud.com/g" /etc/apt/sources.list
 
