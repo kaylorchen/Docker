@@ -11,9 +11,9 @@ RUN apt update && \
 
 COPY rk3588_llm/requirements_rwkv7.txt requirements.txt
 
-RUN pip3 install -r requirements.txt
+RUN pip3 install -r requirements.txt && && pip3 cache purge
 
 COPY rk3588_llm/rkllm_toolkit-1.2.1-cp310-cp310-linux_x86_64.whl rkllm_toolkit-1.2.1-cp310-cp310-linux_x86_64.whl
 
-RUN pip3 install rkllm_toolkit-1.2.1-cp310-cp310-linux_x86_64.whl
+RUN pip3 install rkllm_toolkit-1.2.1-cp310-cp310-linux_x86_64.whl && && pip3 cache purge
 
