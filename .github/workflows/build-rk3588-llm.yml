@@ -30,7 +30,7 @@ jobs:
           context: .
           file: rk3588_llm/Dockerfile
           push: true
-          tags: kaylor/rk3588_llm:latest
+          tags: kaylor/rk3588_llm:1.2.1
           platforms: linux/amd64
 
       - name: Logout of DockerHub
