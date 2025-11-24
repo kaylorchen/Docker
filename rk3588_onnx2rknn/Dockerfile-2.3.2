@@ -14,6 +14,6 @@ RUN	apt-get update && \
     apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 COPY rk3588_onnx2rknn/requirements_cp310-2.3.2.txt /root/requirements.txt
 #RUN pip install -r /root/requirements.txt -i https://mirrors.cloud.tencent.com/pypi/simple && pip cache purge
-RUN pip install -r /root/requirements.txt 
+RUN pip install -r /root/requirements.txt && pip cache purge
 COPY rk3588_onnx2rknn/rknn_toolkit2-2.3.2-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl /root/rknn_toolkit2-2.3.2-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
 RUN pip install /root/rknn_toolkit2-2.3.2-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl && pip cache purge
