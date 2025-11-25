@@ -13,7 +13,7 @@ fast-histogram>=0.11
 numpy<=1.26.4
 
 # base
-onnx>=1.16.1
+onnx==1.16.1
 onnxruntime>=1.10.0
 torch>=1.10.1,<=2.4.0
 # tensorflow>=2.8.0rc0,<=2.14.0
