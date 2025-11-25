@@ -16,10 +16,10 @@ RUN apt-get update && \
 
 # 复制文件到临时目录，安装后立即删除
 COPY rk3588_onnx2rknn/requirements_cp310-2.3.2.txt /tmp/requirements.txt
-COPY rk3588_onnx2rknn/rknn_toolkit2-2.3.2-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl /tmp/rknn_toolkit2.whl
+COPY rk3588_onnx2rknn/rknn_toolkit2-2.3.2-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl /tmp/rknn_toolkit2-2.3.2-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
 
 RUN pip install -r /tmp/requirements.txt && \
     pip install /tmp/rknn_toolkit2.whl && \
     pip cache purge && \
     # 重要：安装完成后立即删除源文件
-    rm -f /tmp/requirements.txt /tmp/rknn_toolkit2.whl
+    rm -f /tmp/requirements.txt /tmp/rknn_toolkit2-2.3.2-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
