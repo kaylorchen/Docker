@@ -10,6 +10,6 @@ RUN sed -i "s/archive.ubuntu.com/mirrors.huaweicloud.com/g" /etc/apt/sources.lis
     sed -i "s/security.ubuntu.com/mirrors.huaweicloud.com/g" /etc/apt/sources.list && \
     sed -i "s/ports.ubuntu.com/mirrors.huaweicloud.com/g" /etc/apt/sources.list
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends ffmpeg intel-media-va-driver && \
+    apt-get install -y --no-install-recommends tzdata ffmpeg intel-media-va-driver && \
     apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
