@@ -1,5 +1,5 @@
 # Version 1.0
-FROM ultralytics/ultralytics:8.4.0
+FROM ultralytics/ultralytics:8.4.3
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=Asia/Shanghai
