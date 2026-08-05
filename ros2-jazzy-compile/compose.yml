@@ -1,0 +1,45 @@
+# ROS2 Jazzy 多架构编译环境 - Docker Compose (amd64 + arm64)
+#
+# 一个文件兼容两个架构, 用 profiles 区分, 两个版本可同时运行。
+#
+#   x86 环境:        docker compose --profile amd64 up -d
+#   ARM 交叉编译:    docker compose --profile arm64 up -d
+#   两个一起跑:      docker compose --profile amd64 --profile arm64 up -d
+#
+# 进入容器:         docker exec -it <容器名> bash
+#   amd64: ros2-jazzy-compile-amd64
+#   arm64: ros2-jazzy-compile-arm64
+# 停止:             docker compose --profile <amd64|arm64> down
+#
+# 特性:
+#   - 后台常驻运行, 开机自启 (restart: unless-stopped)
+#   - 挂载宿主机 ~/work 到容器内相同路径 /home/kaylor/work,
+#     编译产物在容器内外的绝对路径一致, 不会出现路径错位
+#   - arm64 使用已装好依赖的镜像 ros2-jazzy-compile-arm64:withdeps,
+#     在 x86 主机上通过 qemu/binfmt 模拟运行, 无需重新构建镜像
+
+services:
+  ros2-jazzy-compile-amd64:
+    image: ros2-jazzy-compile-amd64:latest
+    container_name: ros2-jazzy-compile-amd64
+    profiles: ["amd64"]
+    restart: unless-stopped
+    tty: true
+    stdin_open: true
+    working_dir: /home/kaylor/work
+    volumes:
+      - /home/kaylor/work:/home/kaylor/work
+    command: ["bash", "-c", "tail -f /dev/null"]
+
+  ros2-jazzy-compile-arm64:
+    image: ros2-jazzy-compile-arm64:withdeps
+    container_name: ros2-jazzy-compile-arm64
+    platform: linux/arm64
+    profiles: ["arm64"]
+    restart: unless-stopped
+    tty: true
+    stdin_open: true
+    working_dir: /home/kaylor/work
+    volumes:
+      - /home/kaylor/work:/home/kaylor/work
+    command: ["bash", "-c", "tail -f /dev/null"]
