@@ -17,6 +17,7 @@
     </General>
     <Discovery>
       <ParticipantIndex>auto</ParticipantIndex>
+      <MaxAutoParticipantIndex>25</MaxAutoParticipantIndex>
       <SPDPInterval>5 s</SPDPInterval>
       <Peers>
         <Peer address="192.168.111.143"/>

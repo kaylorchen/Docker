@@ -16,8 +16,9 @@
 #   - amd64 走桥接网络 + 固定端口发布 + ExternalNetworkAddress (方案 A):
 #     容器保持网络隔离, DDS 单播经宿主机 DNAT/SNAT 与局域网设备 (香橙派) 通信
 #   - arm64 保持 host 网络 (纯交叉编译用途, 不做 DDS 通信)
-#   - 挂载宿主机 ~/work 到容器内相同路径 /home/kaylor/work,
-#     容器内外绝对路径一致, 不会出现路径错位
+#   - amd64: 不挂载宿主机目录 (默认), working_dir 在容器内 /root/work;
+#     如需挂载取消 compose 内注释行并按需改路径
+#     arm64: 挂载到相同路径 /home/kaylor/work (交叉编译绝对路径一致)
 #   - arm64 在 x86 主机上需 qemu/binfmt 模拟运行
 
 services:
@@ -28,15 +29,24 @@ services:
     restart: unless-stopped
     ports:
       # DDS 单播端口段 (domain 0): ParticipantIndex auto, 第 n 个进程占
-      # 7410+2n (SPDP) / 7411+2n (数据), 此段支持最多 6 个容器内 ROS2 进程
-      - "7410-7421:7410-7421/udp"
+      # 7410+2n (SPDP) / 7411+2n (数据), 此段支持最多 26 个容器内 ROS2 进程
+      # (索引 0~25, 与 XML 的 MaxAutoParticipantIndex 对应)
+      - "7410-7461:7410-7461/udp"
+      - "8765:8765/tcp"   # Foxglove 官方桥接 foxglove_bridge 的 WebSocket
+      - "9090:9090/tcp"   # rosbridge_server 的 WebSocket (Foxglove Studio 兼容)
     tty: true
     stdin_open: true
-    working_dir: /home/kaylor/work
+    working_dir: /root/work
     volumes:
-      - /home/kaylor/work:/home/kaylor/work
+      # amd64 不挂载宿主机目录; 如需挂载, 取消下面注释并按需改路径
+      # - /home/kaylor/work:/root/work
       - ./dds/cyclonedds-bridge.xml:/etc/ros/dds/cyclonedds.xml
-    command: ["bash", "-c", "source /opt/ros/humble/setup.bash && tail -f /dev/null"]
+    environment:
+      - RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
+      - CYCLONEDDS_URI=file:///etc/ros/dds/cyclonedds.xml
+      - ROS_DOMAIN_ID=0
+    # 默认启动 foxglove_bridge (WebSocket 8765, 端口已映射)
+    command: ["bash", "-c", "source /opt/ros/humble/setup.bash && ros2 launch foxglove_bridge foxglove_bridge_launch.xml"]
 
   ros2-humble-dev-arm64:
     image: ros2-humble-dev-arm64:latest

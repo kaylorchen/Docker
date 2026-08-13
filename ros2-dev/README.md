@@ -59,9 +59,10 @@ docker buildx build --platform linux/amd64,linux/arm64 -t ros2-humble-dev:latest
 
 ## Docker Compose（后台常驻）
 
-`compose.yml` 用 **profiles** 区分两个架构，一个文件兼容两个版本，后台常驻运行（`restart: unless-stopped`，开机自启）。宿主机 `~/work` 挂载到容器内**相同路径** `/home/kaylor/work`。
+`compose.yml` 用 **profiles** 区分两个架构，一个文件兼容两个版本，后台常驻运行（`restart: unless-stopped`，开机自启）。amd64 默认**不挂载**宿主机目录（工作目录为容器内 `/root/work`），如需挂载取消 compose 内注释并按需改路径；arm64 为交叉编译环境，挂载到相同路径 `/home/kaylor/work` 保证编译产物绝对路径一致。
 
-- **amd64（方案 A）桥接网络 + 端口段发布**：容器保持网络隔离，`ports` 发布 UDP 7410-7421（domain 0，ParticipantIndex auto，每个容器内进程自动占 7410+2n / 7411+2n，最多 6 进程），XML 用 `ExternalNetworkAddress=192.168.111.111` 让对端回包经宿主机 DNAT 进容器——DDS 单播可跨桥接 NAT，原理详见 [DDS 跨机通信调试记录](#dds-跨机通信调试记录)
+- **amd64（方案 A）桥接网络 + 端口段发布**：容器保持网络隔离，`ports` 发布 UDP 7410-7461（domain 0，ParticipantIndex auto，每个容器内进程自动占 7410+2n / 7411+2n，最多 26 进程），XML 用 `ExternalNetworkAddress=192.168.111.111` 让对端回包经宿主机 DNAT 进容器——DDS 单播可跨桥接 NAT，原理详见 [DDS 跨机通信调试记录](#dds-跨机通信调试记录)
+- **Foxglove WebSocket 端口**：`8765`（foxglove_bridge）/ `9090`（rosbridge_server）已映射，容器内装好对应的桥接包并启动后，Foxglove Studio 连 `ws://<宿主机IP>:<端口>` 即可
 - **arm64** 保持 `network_mode: host`（纯交叉编译用途，不做 DDS 通信）
 - **`dds/` 挂载**：CycloneDDS 配置放在宿主机 `dds/` 目录并挂载进容器，改配置和重建容器互不影响（容器内临时改的配置会在 recreate 时丢失）
 

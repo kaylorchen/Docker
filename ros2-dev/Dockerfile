@@ -43,13 +43,19 @@ RUN set -eux; \
     # 4. 安装 apt-fast (来自私有源 jammy 通道, 自动带 aria2)
     apt-get install -y --no-install-recommends apt-fast; \
     # 5. 用 apt-fast 安装 iproute2 + vim + ROS2 demo 包 + CycloneDDS 自动配置 (私有源)
+    #    + Foxglove 全家桶 (bridge 默认启动, rosbridge 兼容, MCAP 录制)
     apt-fast install -y --no-install-recommends \
         iproute2 \
         vim \
         iputils-ping \
         ros-humble-demo-nodes-cpp \
         ros-humble-demo-nodes-py \
-        ros2-cyclonedds-config; \
+        ros2-cyclonedds-config \
+        ros-humble-foxglove-bridge \
+        ros-humble-foxglove-compressed-video-transport \
+        ros-humble-foxglove-msgs \
+        ros-humble-rosbridge-suite \
+        ros-humble-rosbag2-storage-mcap; \
     # 6. 交互式 shell 自动 source ROS2 环境 (exec 进去直接有 ros2 命令)
     printf '\n# ROS2 environment\nsource /opt/ros/humble/setup.bash\n' >> /etc/bash.bashrc; \
     # 7. 同层清理, 缓存不进镜像
