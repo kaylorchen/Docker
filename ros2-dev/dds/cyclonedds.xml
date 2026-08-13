@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- 容器 (Docker 宿主 192.168.111.111) - 单播互指方案
+     network_mode: host 下 eth0 即宿主机 LAN 网卡
+     多播在 WiFi AP 下不可靠, 关闭多播; 发现走单播互指 (192.168.111.143 = 香橙派) -->
+<CycloneDDS>
+  <Domain id="any">
+    <General>
+      <Interfaces>
+        <NetworkInterface name="eth0" priority="0" />
+      </Interfaces>
+      <AllowMulticast>false</AllowMulticast>
+    </General>
+    <Discovery>
+      <ParticipantIndex>auto</ParticipantIndex>
+      <SPDPInterval>5 s</SPDPInterval>
+      <Peers>
+        <Peer address="192.168.111.143"/>
+      </Peers>
+    </Discovery>
+  </Domain>
+</CycloneDDS>

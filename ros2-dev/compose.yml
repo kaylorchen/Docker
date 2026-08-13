@@ -1,0 +1,50 @@
+# ROS2 Humble 开发环境 - Docker Compose (amd64 + arm64)
+#
+# 一个文件兼容两个架构, 用 profiles 区分, 两个版本可同时运行。
+#
+#   x86 环境:     docker compose --profile amd64 up -d
+#   ARM 环境:     docker compose --profile arm64 up -d
+#   两个一起跑:   docker compose --profile amd64 --profile arm64 up -d
+#
+# 进入容器:      docker exec -it <容器名> bash
+#   amd64: ros2-humble-dev-amd64
+#   arm64: ros2-humble-dev-arm64
+# 停止:          docker compose --profile <amd64|arm64> down
+#
+# 特性:
+#   - 后台常驻运行, 开机自启 (restart: unless-stopped)
+#   - network_mode: host 直通宿主网络, ROS2/DDS 与局域网设备
+#     (如香橙派) 直接通信, 不受 Docker 桥接 NAT 影响
+#   - 挂载宿主机 ~/work 到容器内相同路径 /home/kaylor/work,
+#     容器内外绝对路径一致, 不会出现路径错位
+#   - arm64 在 x86 主机上需 qemu/binfmt 模拟运行
+
+services:
+  ros2-humble-dev-amd64:
+    image: ros2-humble-dev-amd64:latest
+    container_name: ros2-humble-dev-amd64
+    profiles: ["amd64"]
+    restart: unless-stopped
+    network_mode: host
+    tty: true
+    stdin_open: true
+    working_dir: /home/kaylor/work
+    volumes:
+      - /home/kaylor/work:/home/kaylor/work
+      - ./dds/cyclonedds.xml:/etc/ros/dds/cyclonedds.xml
+    command: ["bash", "-c", "source /opt/ros/humble/setup.bash && tail -f /dev/null"]
+
+  ros2-humble-dev-arm64:
+    image: ros2-humble-dev-arm64:latest
+    container_name: ros2-humble-dev-arm64
+    platform: linux/arm64
+    profiles: ["arm64"]
+    restart: unless-stopped
+    network_mode: host
+    tty: true
+    stdin_open: true
+    working_dir: /home/kaylor/work
+    volumes:
+      - /home/kaylor/work:/home/kaylor/work
+      - ./dds/cyclonedds.xml:/etc/ros/dds/cyclonedds.xml
+    command: ["bash", "-c", "source /opt/ros/humble/setup.bash && tail -f /dev/null"]
