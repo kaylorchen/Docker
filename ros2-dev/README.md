@@ -20,7 +20,8 @@ ros2-dev/
 ├── Dockerfile      # 多架构构建脚本 (amd64 / arm64 自适应)
 ├── compose.yml     # Docker Compose: 后台常驻运行, profiles 区分架构
 ├── dds/
-│   └── cyclonedds.xml  # CycloneDDS 配置 (挂载进容器, 重建不丢)
+│   ├── cyclonedds.xml         # host 网络版 CycloneDDS 配置 (回退用)
+│   └── cyclonedds-bridge.xml  # 桥接网络版 (方案 A, amd64 当前挂载)
 └── README.md       # 本文件
 ```
 
@@ -60,8 +61,9 @@ docker buildx build --platform linux/amd64,linux/arm64 -t ros2-humble-dev:latest
 
 `compose.yml` 用 **profiles** 区分两个架构，一个文件兼容两个版本，后台常驻运行（`restart: unless-stopped`，开机自启）。宿主机 `~/work` 挂载到容器内**相同路径** `/home/kaylor/work`。
 
-- **`network_mode: host`**：容器直通宿主网络，ROS2/DDS 才能与局域网设备（如香橙派）通信——Docker 桥接网络的 NAT 会破坏 DDS 的 locator 宣告和单播发现，详见 [ros2-dev 调试记录](#dds-跨机通信调试记录)
-- **`dds/cyclonedds.xml` 挂载**：CycloneDDS 配置放在宿主机 `dds/` 目录并挂载进容器，改配置和重建容器互不影响（容器内临时改的配置会在 recreate 时丢失）
+- **amd64（方案 A）桥接网络 + 端口段发布**：容器保持网络隔离，`ports` 发布 UDP 7410-7421（domain 0，ParticipantIndex auto，每个容器内进程自动占 7410+2n / 7411+2n，最多 6 进程），XML 用 `ExternalNetworkAddress=192.168.111.111` 让对端回包经宿主机 DNAT 进容器——DDS 单播可跨桥接 NAT，原理详见 [DDS 跨机通信调试记录](#dds-跨机通信调试记录)
+- **arm64** 保持 `network_mode: host`（纯交叉编译用途，不做 DDS 通信）
+- **`dds/` 挂载**：CycloneDDS 配置放在宿主机 `dds/` 目录并挂载进容器，改配置和重建容器互不影响（容器内临时改的配置会在 recreate 时丢失）
 
 ```bash
 # x86 环境（后台启动）
@@ -135,3 +137,23 @@ apt-fast clean               # 清理下载目录
 ```
 
 配置位于 `/etc/apt-fast.conf`；带 `-y` 时自动进入免交互下载模式（`DOWNLOADBEFORE`），适合脚本/CI 环境。
+
+## DDS 跨机通信调试记录
+
+香橙派（192.168.111.143，WiFi）收不到容器 Hello World 的两个根因：
+
+1. **Docker 桥接网络破坏 DDS 通信**：桥接 NAT 下容器报文中宣告的 locator 是容器内网 IP（172.18.0.2），对端路由不回去；且对端发往宿主机 7410 端口的单播 SPDP 无人监听（桥接默认不发布端口），包被内核丢弃。
+2. **容器 recreate 丢失运行时配置**：容器内改的 `cyclonedds.xml` 存在可写层，重建即回退到镜像内版本。
+
+**方案 A（当前 amd64 采用）**：桥接网络 + 端口段发布 + `ExternalNetworkAddress`：
+
+- `ParticipantIndex=auto`：容器内每个 ROS2 进程自动取空闲索引，第 n 个进程占 **UDP 7410+2n（单播 SPDP）/ 7411+2n（数据）**；compose `ports` 发布 7410-7421 端口段（支持最多 6 个进程同时运行）→ 对端回包经 DNAT 进容器。**不要钉死 ParticipantIndex=0**：那会限制同一台机器上同时只能跑一个 ROS2 进程（第二个进程绑定 7410/7411 失败）；
+- `ExternalNetworkAddress=192.168.111.111` 让宣告给对端的 locator 用宿主机 IP → 对端回包地址可路由；
+- `Peer 127.0.0.1`：容器内进程间发现走回环——每个进程把 SPDP 送到 127.0.0.1:7410（index 0 进程），经回包/头发夹 DNAT 互相认识；
+- 出方向经 SNAT 天然可达，两端 XML 关多播、单播互指（香橙派 Peer 指宿主机 IP）。
+
+**端口公式**（排查用）：`7400 + 250×domain_id + 10 + 2×ParticipantIndex`（单播 SPDP），数据端口 +1。**换 `ROS_DOMAIN_ID` 时 compose 的 `ports` 必须同步改**（如 domain 1 → 7660/7661），双方 domain 必须一致。
+
+**回退 host 方案**：`git checkout` 上一版 `compose.yml`，挂载改回 `dds/cyclonedds.xml`，`docker compose --profile amd64 up -d` 一次 recreate 即恢复。
+
+**香橙派侧仅一处改动**：`ParticipantIndex` 0 → auto（理由同上：钉死 0 时 Pi 上同时只能跑一个 ROS2 进程，daemon 占着 7410/7411 后 echo 会绑定失败）。除此之外它眼中对端始终是 192.168.111.111（host 方案是宿主直连，方案 A 是宿主端口 DNAT），无需其他改动。

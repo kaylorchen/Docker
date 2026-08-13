@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- 容器 - 桥接网络方案 (方案 A): 单播互指 + 端口段发布 + ExternalNetworkAddress
+     ParticipantIndex=auto → 容器内每个 ROS2 进程自动取空闲索引:
+     第 n 个进程占 UDP 7410+2n (SPDP) + 7411+2n (数据),
+     compose 里 ports 发布 7410~7421 端口段 (最多 6 个进程同时运行);
+     ExternalNetworkAddress 让宣告给对端的 locator 用宿主机 IP (192.168.111.111),
+     Pi 回包打宿主端口 → Docker DNAT 进容器。香橙派侧无需改动。
+     注: 若更换 ROS_DOMAIN_ID, 端口整体 +250×domain_id, compose ports 需同步改 -->
+<CycloneDDS>
+  <Domain id="any">
+    <General>
+      <Interfaces>
+        <NetworkInterface name="eth0" priority="0" />
+      </Interfaces>
+      <AllowMulticast>false</AllowMulticast>
+      <ExternalNetworkAddress>192.168.111.111</ExternalNetworkAddress>
+    </General>
+    <Discovery>
+      <ParticipantIndex>auto</ParticipantIndex>
+      <SPDPInterval>5 s</SPDPInterval>
+      <Peers>
+        <Peer address="192.168.111.143"/>
+        <!-- 回环 Peer: 容器内每个进程把 SPDP 送到 127.0.0.1:7410 (index 0 进程),
+             通过回包/头发夹 DNAT 完成容器内进程间发现 -->
+        <Peer address="127.0.0.1"/>
+      </Peers>
+    </Discovery>
+  </Domain>
+</CycloneDDS>
