@@ -1,0 +1,28 @@
+# ROS2 Humble (Ubuntu 22.04) arm64 交叉编译环境 - Docker Compose
+#
+# 宿主系统本身是 ROS2 Humble (amd64)，此环境仅用于 arm64 交叉编译。
+# 通过 qemu/binfmt 在 x86 主机上模拟运行 arm64 容器。
+#
+#   x86 构建:        docker build --platform linux/arm64 -t ros2-humble-compile-arm64:latest .
+#   启动:            docker compose up -d
+#   进入容器:        docker exec -it ros2-humble-compile-arm64 bash
+#   停止:            docker compose down
+#
+# 特性:
+#   - 后台常驻运行, 开机自启 (restart: unless-stopped)
+#   - 挂载宿主机 ~/work 到容器内相同路径 /home/kaylor/work,
+#     编译产物在容器内外的绝对路径一致, 不会出现路径错位
+#   - platform: linux/arm64 强制 arm64, 在 x86 主机上通过 qemu/binfmt 模拟运行
+
+services:
+  ros2-humble-compile-arm64:
+    image: ros2-humble-compile-arm64:latest
+    container_name: ros2-humble-compile-arm64
+    platform: linux/arm64
+    restart: unless-stopped
+    tty: true
+    stdin_open: true
+    working_dir: /home/kaylor/work
+    volumes:
+      - /home/kaylor/work:/home/kaylor/work
+    command: ["bash", "-c", "tail -f /dev/null"]
